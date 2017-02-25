@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Cache the pipemenu outputs in openbox's cache
+
+OPENBOX_CACHE="./"
+PIPEMENU_DIR="../pipemenus"
+
+
+
+
+# Make sure the cache directory exists
+if ! [[ -d ${OPENBOX_CACHE} ]]; then
+	mkdir -p ${OPENBOX_CACHE}
+fi
+
+# Refresh the pipemenus
+for i in ${PIPEMENU_DIR}/*; do
+	# Create the cached file in a temporary location in case the pipemenu takes a while to generate
+	CACHE_FILE=$(basename ${i}).cache
+	${i} > ${OPENBOX_CACHE}/${CACHE_FILE}.new
+	mv -f ${OPENBOX_CACHE}/${CACHE_FILE}.new ${OPENBOX_CACHE}/${CACHE_FILE}
+done
+
+

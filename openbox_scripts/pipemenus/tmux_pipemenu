@@ -1,0 +1,43 @@
+#!/bin/sh
+
+source ../includes/openbox_func.sh
+source ../includes/tmux_session_func.sh
+
+
+
+
+openbox_pipemenu_header
+
+openbox_menu_header "TMux Restart"
+
+#openbox_pipemenu_item "INIT SESSIONS" "~/.cmds/tmux_servers_startup"
+MENU=""
+for i in $(seq $(num_sessions)); do
+	SESSION_LABEL=$(list_session_names | get_line $i)
+	MENU=${MENU}"${SESSION_LABEL};/home/sean/.bin/tmux_session_restart ${SESSION_LABEL}\n" 
+done
+
+# Sort the list alphabetically (The label can't have a ";" in it)
+IFS=$'\n'
+for i in $(echo -e ${MENU} | sort); do
+	openbox_pipemenu_item $(echo $i | cut -d";" -f 1) $(echo $i | sed 's/^[^;]*;//')
+done
+
+
+
+openbox_menu_footer
+
+MENU=""
+for i in $(seq $(num_sessions)); do
+	SESSION_LABEL=$(list_session_names | get_line $i)
+	MENU=${MENU}"${SESSION_LABEL};/home/sean/.bin/default_terminal -e &quot;tmux attach-session -t ${SESSION_LABEL}&quot;\n" 
+done
+
+# Sort the list alphabetically (The label can't have a ";" in it)
+IFS=$'\n'
+for i in $(echo -e ${MENU} | sort); do
+	openbox_pipemenu_item $(echo $i | cut -d";" -f 1) $(echo $i | sed 's/^[^;]*;//')
+done
+
+openbox_pipemenu_footer
+

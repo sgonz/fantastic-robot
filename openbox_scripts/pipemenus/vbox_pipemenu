@@ -1,0 +1,39 @@
+#!/bin/sh
+
+
+source ../includes/openbox_func.sh
+source ../includes/vbox_func.sh
+
+
+
+IFS=$'\n'
+
+openbox_pipemenu_header
+openbox_menu_header "Start VM"
+
+# Menu for starting Virtual Machines
+for i in $(vbox_stopped_vms); do
+	openbox_menu_header ${i}
+	openbox_pipemenu_item "GUI" "${VBOX} startvm \"${i}\" --type gui"
+	openbox_pipemenu_item "Headless" "${VBOX} startvm \"${i}\" --type headless"
+	openbox_menu_footer
+done
+
+openbox_menu_footer
+
+
+
+openbox_menu_header "Stop VM"
+
+# Menu for stopping Virtual Machines
+for i in $(vbox_running_vms); do
+	openbox_menu_header ${i}
+	openbox_pipemenu_item "Power Off" "${VBOX} controlvm \"${i}\" poweroff"
+	openbox_pipemenu_item "Save State" "${VBOX} controlvm \"${i}\" savestate"
+	openbox_menu_footer
+done
+
+openbox_menu_footer
+openbox_pipemenu_footer
+
+
